@@ -1,7 +1,7 @@
 import React,{useState,useEffect} from "react";
 import "./App.css";
 import db  from "./firebase";
-import { collection, getDocs } from "firebase/firestore";
+import { doc, collection, getDocs, onSnapshot } from "firebase/firestore";
 
 function App() {
 
@@ -16,6 +16,11 @@ function App() {
       setPosts(snapShot.docs.map((doc) => ({ ...doc.data() })))
     })
 
+    // リアルタイムで情報を取得していく　 like Twitter
+    onSnapshot(postData, (post) => {
+      setPosts(post.docs.map((doc) => ({ ...doc.data() })))
+    });
+
   },[])
 
 
@@ -23,12 +28,14 @@ function App() {
     <>
       <div className="App">
 
-        {posts.map((post) => (
-            <div key={post.title}>
-              <h1>{post.title}</h1>
-              <p>{post.text}</p>
-            </div>
-          ))}
+        <div>
+          {posts.map((post) => (
+              <div key={post.title}>
+                <h1>{post.title}</h1>
+                <p>{post.text}</p>
+              </div>
+            ))}
+        </div>
 
         </div>
     </>
